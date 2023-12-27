@@ -193,15 +193,17 @@ class NeoRec:
         Load windows library
         """
         # load NeoRec 64 bit windows library
-        # try:
-        # unload existing library
-        if self.lib is not None:
-            _ctypes.FreeLibrary(self.lib._handle)
-            # load/reload library
-        if self.x64:
-            self.lib = ctypes.windll.LoadLibrary("./nb2mcs.dll")
-        # except:
-        #     self.lib = None
+        try:
+            # unload existing library
+            if self.lib is not None:
+                _ctypes.FreeLibrary(self.lib._handle)
+                # load/reload library
+            if self.x64:
+                self.lib = ctypes.windll.LoadLibrary("./nb2mcs_x64.dll")
+            else:
+                self.lib = ctypes.windll.LoadLibrary("./nb2mcs_x86.dll")
+        except:
+            self.lib = None
 
         # initialization library resources
         res = self.lib.nb2ApiInit()
@@ -243,7 +245,6 @@ class NeoRec:
 
             if self.model == NR_CAP_1 or self.model == NR_CAP_2:
                 self.CountEeg = 16
-
 
         # get device properties
         err = self.lib.nb2GetProperty(self.id, ctypes.byref(self.properties))
